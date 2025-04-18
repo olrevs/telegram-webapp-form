@@ -11,24 +11,39 @@
 </head>
 <body>
   <h2>Граєш ЛВК? зі скількох акків?</h2>
-  <input type="text" id="colorInput" placeholder="Напиши тут..." />
+  <input type="text" id="answer" placeholder="Напиши тут..." />
   <br>
   <button onclick="sendAnswer()">Надіслати</button>
 
 <script>
   function sendAnswer() {
-    const color = document.getElementById("colorInput").value;
+    const input = document.getElementById("answer");
+    const answer = input.value;
 
-    fetch("https://script.google.com/macros/s/AKfycbx2ivoTT2wxI7lkLMy0ubXNg8Ur-JEWo_4hkzGvmwvwADMDjbR5ZSwjmK5f5fT7CmFv/exec", {
+    if (!answer) {
+      alert("Будь ласка, введіть відповідь.");
+      return;
+    }
+
+    // 🔁 Сюди вставляєш своє посилання на WebApp
+    const scriptURL = "https://script.google.com/macros/s/AKfycbx2ivoTT2wxI7lkLMy0ubXNg8Ur-JEWo_4hkzGvmwvwADMDjbR5ZSwjmK5f5fT7CmFv/exec";
+
+    fetch(scriptURL, {
       method: "POST",
-      body: JSON.stringify({ answer: color }),
       headers: {
         "Content-Type": "application/json"
-      }
-    }).then(() => {
-      if (window.Telegram.WebApp) {
-        Telegram.WebApp.close();
-      }
+      },
+      body: JSON.stringify({ answer: answer })
+    })
+    .then(response => response.text())
+    .then(data => {
+      console.log("Відповідь від сервера:", data);
+      alert("✅ Дякуємо! Ваша відповідь надіслана.");
+      input.value = "";
+    })
+    .catch(error => {
+      console.error("❌ Помилка:", error);
+      alert("⚠️ Виникла помилка під час надсилання.");
     });
   }
 </script>
