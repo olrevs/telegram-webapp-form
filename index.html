@@ -15,14 +15,23 @@
   <br>
   <button onclick="sendAnswer()">Надіслати</button>
 
-  <script>
-    function sendAnswer() {
-      const color = document.getElementById("colorInput").value;
-      if (window.Telegram.WebApp) {
-        Telegram.WebApp.sendData(color); // Надсилаємо відповідь боту
-        Telegram.WebApp.close(); // Закриваємо WebApp
+<script>
+  function sendAnswer() {
+    const color = document.getElementById("colorInput").value;
+
+    fetch("https://script.google.com/macros/s/AKfycbx2ivoTT2wxI7lkLMy0ubXNg8Ur-JEWo_4hkzGvmwvwADMDjbR5ZSwjmK5f5fT7CmFv/exec", {
+      method: "POST",
+      body: JSON.stringify({ answer: color }),
+      headers: {
+        "Content-Type": "application/json"
       }
-    }
-  </script>
+    }).then(() => {
+      if (window.Telegram.WebApp) {
+        Telegram.WebApp.close();
+      }
+    });
+  }
+</script>
+
 </body>
 </html>
