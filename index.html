@@ -2,51 +2,49 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>Форма Telegram</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    body { font-family: sans-serif; text-align: center; padding: 2em; }
-    input, button { padding: 10px; margin-top: 1em; width: 80%; font-size: 16px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Опитування</title>
 </head>
 <body>
-  <h2>Граєш ЛВК? зі скількох акків?</h2>
-  <input type="text" id="answer" placeholder="Напиши тут..." />
-  <br>
-  <button onclick="sendAnswer()">Надіслати</button>
+  <h1>Опитування</h1>
 
-<script>
-  function sendAnswer() {
-    const input = document.getElementById("answer");
-    const answer = input.value;
+  <form id="survey-form" onsubmit="event.preventDefault(); sendAnswer();">
+    <label for="answer">Ваша відповідь:</label><br>
+    <input type="text" id="answer" name="answer" required><br><br>
+    <button type="submit">Надіслати</button>
+  </form>
 
-    if (!answer) {
-      alert("Будь ласка, введіть відповідь.");
-      return;
+  <script>
+    function sendAnswer() {
+      const input = document.getElementById("answer");
+      const answer = input.value;
+
+      if (!answer) {
+        alert("Будь ласка, введіть відповідь.");
+        return;
+      }
+
+      // Заміни на своє посилання на WebApp
+      const scriptURL = "https://script.google.com/macros/s/AKfycbx2ivoTT2wxI7lkLMy0ubXNg8Ur-JEWo_4hkzGvmwvwADMDjbR5ZSwjmK5f5fT7CmFv/exec";
+
+      fetch(scriptURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ answer: answer })
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log("Відповідь від сервера:", data);
+        alert("✅ Дякуємо! Ваша відповідь надіслана.");
+        input.value = "";  // Очищаємо поле вводу
+      })
+      .catch(error => {
+        console.error("❌ Помилка:", error);
+        alert("⚠️ Виникла помилка під час надсилання.");
+      });
     }
-
-    // 🔁 Сюди вставляєш своє посилання на WebApp
-    const scriptURL = "https://script.google.com/macros/s/AKfycbx2ivoTT2wxI7lkLMy0ubXNg8Ur-JEWo_4hkzGvmwvwADMDjbR5ZSwjmK5f5fT7CmFv/exec";
-
-    fetch(scriptURL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ answer: answer })
-    })
-    .then(response => response.text())
-    .then(data => {
-      console.log("Відповідь від сервера:", data);
-      alert("✅ Дякуємо! Ваша відповідь надіслана.");
-      input.value = "";
-    })
-    .catch(error => {
-      console.error("❌ Помилка:", error);
-      alert("⚠️ Виникла помилка під час надсилання.");
-    });
-  }
-</script>
-
+  </script>
 </body>
 </html>
